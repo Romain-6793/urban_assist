@@ -1,5 +1,6 @@
 class Chat < ApplicationRecord
   belongs_to :user
-  has_many :messages
-  has_many :favorites
+  has_many :messages, dependent: :destroy
+  has_many :favorites, dependent: :destroy
+  has_many :communes, through: :favorites
 end
