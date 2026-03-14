@@ -1,2 +1,120 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container mt-3">
+
+  <!-- =======================
+       Sidebar gauche
+  ======================== -->
+  <div class="sidebar col-md-3">
+
+    <div class="sidebar-title mb-8">
+      Navigation
+    </div>
+
+    <!-- Nouveau / Historique -->
+    <div class="sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 6.5L8 2l6 4.5V13a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z"></path>
+      </svg>
+      <%= link_to "Nouvelle recherche", root_path %>
+    </div>
+
+    <div class="sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="6"></circle>
+        <path d="M8 5v3l2 2"></path>
+      </svg>
+      Historique
+    </div>
+
+    <!-- Liste des chats existants -->
+    <ul class="sidebar-item list">
+      <% @chats.each do |chat| %>
+        <li class="list-item <%= 'active' if @chat == chat %>">
+          <%= link_to chat.title.presence || "(vide)", root_path(chat_id: chat.id) %>
+          <%= link_to "🗑",
+              chat_path(chat),
+              data: { turbo_method: :delete, turbo_confirm: "Supprimer cette conversation ?" },
+              class: "delete-chat-btn" %>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Favoris / Communes sauvegardées -->
+    <div class="sidebar-title mb-8">
+      Favoris / Communes sauvegardées
+      <span><%= Favorite.count %></span>
+    </div>
+
+    <ul class="sidebar-item list">
+      <% @favorites&.each do |f| %>
+        <li class="list-item <%= 'active' if @chat&.id == f.chat_id %>">
+          <%= link_to f.title.presence || "(vide)", root_path(chat_id: f.chat_id) %>
+        </li>
+      <% end %>
+    </ul>
+
+  </div> <!-- /Sidebar -->
+
+  <!-- =======================
+       Chat principal
+  ======================== -->
+  <div class="col-md-9 d-flex flex-column">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#185FA5" stroke-width="1.5">
+          <path d="M2 6.5L8 2l6 4.5V13a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z"></path>
+          <path d="M6 14V9h4v5"></path>
+        </svg>
+      </div>
+      <div>
+        <div class="topbar-text">Urban Assist</div>
+        <div class="topbar-sub">Analyse de communes · France</div>
+      </div>
+    </div>
+
+    <!-- Messages + Formulaire -->
+    <div class="messages flex-grow-1 d-flex flex-column">
+
+      <!-- Messages existants -->
+      <div id="messages-container" class="card-body overflow-auto flex-grow-1">
+        <% @messages.each do |message| %>
+          <div class="<%= message.role == 'user' ? 'msg-user' : 'msg-bot' %>">
+            <div class="<%= message.role == 'user' ? 'msg-user-bubble' : 'msg-bot-text' %>">
+              <%= message.content %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Formulaire d'envoi -->
+      <div class="input-area">
+        <%= form_with(model: Message.new, url: messages_path) do |f| %>
+          <div class="d-flex input-row">
+            <!-- Champ texte -->
+            <%= f.text_field :content, placeholder: "Tapez votre message ...",
+                 class: "input-field", id: "chat-input", required: true %>
+
+            <!-- Role utilisateur -->
+            <%= f.hidden_field :role, value: "user" %>
+
+            <!-- Chat actif -->
+            <% if @chat %>
+              <%= hidden_field_tag :chat_id, @chat.id %>
+            <% end %>
+
+            <!-- Bouton envoyer -->
+            <%= f.button type: "submit", class: "send-btn", id: "send-btn", disabled: true do %>
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 7L2 2l2 5-2 5 10-5z"></path>
+              </svg>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+    </div> <!-- /Messages + Formulaire -->
+
+  </div> <!-- /Chat principal -->
+
+</div> <!-- /Container -->
