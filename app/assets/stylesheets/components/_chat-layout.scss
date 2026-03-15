@@ -1,0 +1,27 @@
+// ─────────────────────────────────────────────
+// _chat-layout.scss
+// ─────────────────────────────────────────────
+
+.chat-layout {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  height: 640px;
+  overflow: hidden;
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+}

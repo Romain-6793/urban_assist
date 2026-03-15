@@ -1,2 +1,102 @@
-<h1>Favorites#index</h1>
-<p>Find me in app/views/favorites/index.html.erb</p>
+<div class="container mt-3">
+
+  <!-- Sidebar -->
+  <%= render "shared/sidebar" %>
+
+  <!-- Contenu principal -->
+  <div class="col-md-9 d-flex flex-column">
+
+    <!-- Topbar -->
+    <%= render "shared/topbar" %>
+
+
+    <!-- Grille de favoris -->
+    <div class="p-4 overflow-auto flex-grow-1">
+
+      <% if @favorites.blank? %>
+        <p class="text-muted">Aucun favori pour le moment.</p>
+      <% else %>
+        <div class="cards-grid">
+          <% @favorites.each do |f| %>
+            <div class="commune-card commune-card--favorited">
+
+              <div class="commune-card__header">
+                <div class="commune-card__meta">
+                  <div class="commune-card__name"><%= f.commune.name %></div>
+                  <div class="commune-card__dept"><%= f.commune.region %> · <%= f.commune.department %></div>
+                </div>
+
+                <!-- Bouton retirer des favoris -->
+                 <%= button_to chat_favorite_path(f.chat_id, f.id),
+                    method: :delete,
+                    data: { turbo_confirm: "Retirer ce favori ?" },
+                    class: "fav-button fav-button--active",
+                    form: { style: "display:inline" } do %>
+                  <svg viewBox="0 0 12 12" fill="currentColor">
+                    <path d="M6 1.5l1.3 2.7 3 .4-2.2 2.1.5 3L6 8.2 3.4 9.7l.5-3L1.7 4.6l3-.4L6 1.5z"></path>
+                  </svg>
+                <% end %>
+              </div>
+
+              <div class="commune-card__divider"></div>
+
+              <div class="commune-card__stats">
+                <% if f.commune.avg_price_sqm.present? %>
+                  <div class="commune-card__stat-row">
+                    <span class="commune-card__stat-label">Prix moyen</span>
+                    <span class="commune-card__stat-value"><%= number_with_delimiter(f.commune.avg_price_sqm.to_i) %> €/m²</span>
+                  </div>
+                <% end %>
+
+                <% if f.commune.median_price_sqm.present? %>
+                  <div class="commune-card__stat-row">
+                    <span class="commune-card__stat-label">Prix médian</span>
+                    <span class="commune-card__stat-value"><%= number_with_delimiter(f.commune.median_price_sqm.to_i) %> €/m²</span>
+                  </div>
+                <% end %>
+
+                <% if f.commune.population.present? %>
+                  <div class="commune-card__stat-row">
+                    <span class="commune-card__stat-label">Population</span>
+                    <span class="commune-card__stat-value"><%= number_with_delimiter(f.commune.population) %></span>
+                  </div>
+                <% end %>
+
+                <% if f.commune.price_evolution_1y.present? %>
+                  <div class="commune-card__stat-row">
+                    <span class="commune-card__stat-label">Évolution 1 an</span>
+                    <span class="commune-card__stat-value <%= f.commune.price_evolution_1y >= 0 ? 'commune-card__stat-value--positive' : 'commune-card__stat-value--warning' %>">
+                      <%= f.commune.price_evolution_1y > 0 ? "+" : "" %><%= f.commune.price_evolution_1y %> %
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+
+              <% if f.commune.total_transactions.present? %>
+                <div class="commune-card__score">
+                  <div class="commune-card__score-header">
+                    <span>Transactions</span>
+                    <span><%= number_with_delimiter(f.commune.total_transactions) %></span>
+                  </div>
+                  <div class="commune-card__score-track">
+                    <div class="commune-card__score-fill" style="width:<%= [f.commune.total_transactions / 500.0 * 100, 100].min.to_i %>%"></div>
+                  </div>
+                </div>
+              <% end %>
+
+              <div class="commune-card__tags">
+                <span class="commune-card__tag"><%= f.commune.department %></span>
+                <% if f.note.present? %>
+                  <span class="commune-card__tag"><%= f.note %></span>
+                <% end %>
+              </div>
+
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+
+</div>

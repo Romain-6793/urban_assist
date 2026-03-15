@@ -1,0 +1,40 @@
+<div class="sidebar col-md-3">
+
+  <div class="sidebar__title">Navigation</div>
+
+  <!-- Liens principaux -->
+  <div class="sidebar__item">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M2 6.5L8 2l6 4.5V13a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z"></path>
+    </svg>
+    <%= link_to "Nouvelle recherche", root_path %>
+  </div>
+
+  <div class="sidebar__item">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="8" cy="8" r="6"></circle>
+      <path d="M8 5v3l2 2"></path>
+    </svg>
+    Historique
+  </div>
+
+  <!-- Liste des chats -->
+  <ul class="sidebar__list">
+    <% @chats.each do |chat| %>
+      <li class="sidebar__list-item <%= 'sidebar__list-item--active' if @chat == chat %>">
+        <%= link_to chat.title.presence || "(vide)", root_path(chat_id: chat.id) %>
+        <%= link_to "🗑",
+            chat_path(chat),
+            data: { turbo_method: :delete, turbo_confirm: "Supprimer cette conversation ?" },
+            class: "sidebar__delete-btn" %>
+      </li>
+    <% end %>
+  </ul>
+
+  <!-- Favoris -->
+  <%= link_to favorites_path, class: "sidebar__title #{'sidebar__title--active' if controller_name == 'favorites'}" do %>
+    Favoris / Communes sauvegardées
+    <span><%= @favorites&.count || 0 %></span>
+  <% end %>
+
+</div>

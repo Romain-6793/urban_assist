@@ -1,86 +1,20 @@
-<div class="container mt-3">
+<div class="chat-layout container mt-3">
 
-  <!-- =======================
-       Sidebar gauche
-  ======================== -->
-  <div class="sidebar col-md-3">
+  <!-- Sidebar -->
+  <%= render "shared/sidebar" %>
 
-    <div class="sidebar-title mb-8">
-      Navigation
-    </div>
+  <!-- Zone principale -->
+  <div class="chat-layout__main col-md-9 d-flex flex-column">
 
-    <!-- Nouveau / Historique -->
-    <div class="sidebar-item">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M2 6.5L8 2l6 4.5V13a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z"></path>
-      </svg>
-      <%= link_to "Nouvelle recherche", root_path %>
-    </div>
+    <%= render "shared/topbar" %>
 
-    <div class="sidebar-item">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="8" cy="8" r="6"></circle>
-        <path d="M8 5v3l2 2"></path>
-      </svg>
-      Historique
-    </div>
+    <div class="chat-layout__body flex-grow-1 d-flex flex-column">
 
-    <!-- Liste des chats existants -->
-    <ul class="sidebar-item list">
-      <% @chats.each do |chat| %>
-        <li class="list-item <%= 'active' if @chat == chat %>">
-          <%= link_to chat.title.presence || "(vide)", root_path(chat_id: chat.id) %>
-          <%= link_to "🗑",
-              chat_path(chat),
-              data: { turbo_method: :delete, turbo_confirm: "Supprimer cette conversation ?" },
-              class: "delete-chat-btn" %>
-        </li>
-      <% end %>
-    </ul>
-
-    <!-- Favoris / Communes sauvegardées -->
-    <div class="sidebar-title mb-8">
-      Favoris / Communes sauvegardées
-      <span><%= Favorite.count %></span>
-    </div>
-
-    <ul class="sidebar-item list">
-      <% @favorites&.each do |f| %>
-        <li class="list-item <%= 'active' if @chat&.id == f.chat_id %>">
-          <%= link_to f.title.presence || "(vide)", root_path(chat_id: f.chat_id) %>
-        </li>
-      <% end %>
-    </ul>
-
-  </div> <!-- /Sidebar -->
-
-  <!-- =======================
-       Chat principal
-  ======================== -->
-  <div class="col-md-9 d-flex flex-column">
-
-    <!-- Topbar -->
-    <div class="topbar">
-      <div class="topbar-icon">
-        <svg viewBox="0 0 16 16" fill="none" stroke="#185FA5" stroke-width="1.5">
-          <path d="M2 6.5L8 2l6 4.5V13a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z"></path>
-          <path d="M6 14V9h4v5"></path>
-        </svg>
-      </div>
-      <div>
-        <div class="topbar-text">Urban Assist</div>
-        <div class="topbar-sub">Analyse de communes · France</div>
-      </div>
-    </div>
-
-    <!-- Messages + Formulaire -->
-    <div class="messages flex-grow-1 d-flex flex-column">
-
-      <!-- Messages existants -->
-      <div id="messages-container" class="card-body overflow-auto flex-grow-1">
+      <!-- Messages -->
+      <div class="chat-messages flex-grow-1" id="messages-container">
         <% @messages.each do |message| %>
-          <div class="<%= message.role == 'user' ? 'msg-user' : 'msg-bot' %>">
-            <div class="<%= message.role == 'user' ? 'msg-user-bubble' : 'msg-bot-text' %>">
+          <div class="chat-messages__item chat-messages__item--<%= message.role %>">
+            <div class="chat-messages__bubble chat-messages__bubble--<%= message.role %>">
               <%= message.content %>
             </div>
           </div>
@@ -88,23 +22,19 @@
       </div>
 
       <!-- Formulaire d'envoi -->
-      <div class="input-area">
+      <div class="chat-input">
         <%= form_with(model: Message.new, url: messages_path) do |f| %>
-          <div class="d-flex input-row">
-            <!-- Champ texte -->
-            <%= f.text_field :content, placeholder: "Tapez votre message ...",
-                 class: "input-field", id: "chat-input", required: true %>
-
-            <!-- Role utilisateur -->
+          <div class="chat-input__row">
+            <%= f.text_field :content,
+                placeholder: "Tapez votre message ...",
+                class: "chat-input__field",
+                id: "chat-input",
+                required: true %>
             <%= f.hidden_field :role, value: "user" %>
-
-            <!-- Chat actif -->
             <% if @chat %>
               <%= hidden_field_tag :chat_id, @chat.id %>
             <% end %>
-
-            <!-- Bouton envoyer -->
-            <%= f.button type: "submit", class: "send-btn", id: "send-btn", disabled: true do %>
+            <%= f.button type: "submit", class: "chat-input__send", id: "send-btn", disabled: true do %>
               <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M12 7L2 2l2 5-2 5 10-5z"></path>
               </svg>
@@ -113,8 +43,8 @@
         <% end %>
       </div>
 
-    </div> <!-- /Messages + Formulaire -->
+    </div>
 
-  </div> <!-- /Chat principal -->
+  </div>
 
-</div> <!-- /Container -->
+</div>

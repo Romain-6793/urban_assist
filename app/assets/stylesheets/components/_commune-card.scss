@@ -1,0 +1,227 @@
+// ─────────────────────────────────────────────
+// _commune-card.scss — Card de commune
+// ─────────────────────────────────────────────
+
+.commune-card {
+  background: white;
+  border: 0.5px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+
+  position: relative;
+  padding: 12px;
+  cursor: pointer;
+  min-width: 172px;
+
+  &:hover {
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  &--favorited {
+    border-color: #185FA5;
+    border-width: 1px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(24, 95, 165, 0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  &__meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__dept {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 1px;
+  }
+
+  &__divider {
+    height: 0.5px;
+    background: #f3f4f6;
+    margin: 8px 0;
+  }
+
+  &__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  &__stat-label {
+    font-size: 11px;
+    color: #9ca3af;
+    white-space: nowrap;
+  }
+
+  &__stat-value {
+    font-size: 12px;
+    font-weight: 500;
+    color: #111;
+    text-align: right;
+
+    &--positive { color: #16a34a; }
+    &--accent   { color: #185FA5; }
+    &--warning  { color: #d97706; }
+  }
+
+  &__score {
+    margin-top: 8px;
+  }
+
+  &__score-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 10px;
+    color: #9ca3af;
+  }
+
+  &__score-track {
+    height: 3px;
+    background: #f3f4f6;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  &__score-fill {
+    height: 100%;
+    background: #185FA5;
+    border-radius: inherit;
+    transition: width 0.15s;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 0.5px solid #e5e7eb;
+
+    &--transport {
+      background: #eff6ff;
+      color: #185FA5;
+      border-color: transparent;
+    }
+
+    &--nature {
+      background: #f0fdf4;
+      color: #16a34a;
+      border-color: transparent;
+    }
+
+    &--premium {
+      background: #fffbeb;
+      color: #d97706;
+      border-color: transparent;
+    }
+  }
+}
+
+// ── .fav-button ───────────────────────────────
+.fav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
+
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 0.5px solid #e5e7eb;
+  background: #f3f4f6;
+  cursor: pointer;
+  appearance: none;
+
+  svg {
+    width: 11px;
+    height: 11px;
+    color: #9ca3af;
+    transition: color 0.15s, transform 0.15s;
+    pointer-events: none;
+  }
+
+  &:hover {
+    background: #eff6ff;
+    border-color: rgba(24, 95, 165, 0.3);
+
+    svg { color: #185FA5; }
+  }
+
+  &:active { transform: scale(0.94); }
+
+  &--active {
+    background: #185FA5;
+    border-color: #185FA5;
+
+    svg {
+      color: white;
+      transform: scale(1.1);
+    }
+
+    &:hover {
+      background: #1a6abf;
+      border-color: #1a6abf;
+    }
+  }
+}
+
+// ── .cards-row ────────────────────────────────
+.cards-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+// ── .cards-grid ───────────────────────────────
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
