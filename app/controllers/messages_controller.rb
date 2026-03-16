@@ -27,7 +27,7 @@ class MessagesController < ApplicationController
     end
 
     # Sauvegarde le chat et le message
-    @chat.save!
+    @chat.save! if @chat.new_record?
     @message.save!
 
     # Redirige vers le chat créé ou existant
