@@ -1,2 +1,50 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="chat-layout container mt-3">
+
+  <!-- Sidebar -->
+  <%= render "shared/sidebar" %>
+
+  <!-- Zone principale -->
+  <div class="chat-layout__main col-md-9 d-flex flex-column">
+
+    <%= render "shared/topbar" %>
+
+    <div class="chat-layout__body flex-grow-1 d-flex flex-column">
+
+      <!-- Messages -->
+      <div class="chat-messages flex-grow-1" id="messages-container">
+        <% @messages.each do |message| %>
+          <div class="chat-messages__item chat-messages__item--<%= message.role %>">
+            <div class="chat-messages__bubble chat-messages__bubble--<%= message.role %>">
+              <%= message.content %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Formulaire d'envoi -->
+      <div class="chat-input">
+        <%= form_with(model: Message.new, url: messages_path) do |f| %>
+          <div class="chat-input__row">
+            <%= f.text_field :content,
+                placeholder: "Tapez votre message ...",
+                class: "chat-input__field",
+                id: "chat-input",
+                required: true %>
+            <%= f.hidden_field :role, value: "user" %>
+            <% if @chat %>
+              <%= hidden_field_tag :chat_id, @chat.id %>
+            <% end %>
+            <%= f.button type: "submit", class: "chat-input__send", id: "send-btn", disabled: true do %>
+              <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 7L2 2l2 5-2 5 10-5z"></path>
+              </svg>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

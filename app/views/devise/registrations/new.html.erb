@@ -1,25 +1,52 @@
-<h2>Sign up</h2>
+<div class="auth-container">
+  <div class="auth-card">
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+    <div class="auth-title">
+      Sign up
+    </div>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= f.error_notification %>
+
+      <div class="form-inputs">
+
+        <div class="auth-field">
+          <%= f.input :email,
+              label: false,
+              placeholder: "Email",
+              required: true,
+              autofocus: true,
+              input_html: { autocomplete: "email", class: "auth-input" } %>
+        </div>
+
+        <div class="auth-field">
+          <%= f.input :password,
+              label: false,
+              placeholder: "Password",
+              required: true,
+              hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+              input_html: { autocomplete: "new-password", class: "auth-input" } %>
+        </div>
+
+        <div class="auth-field">
+          <%= f.input :password_confirmation,
+              label: false,
+              placeholder: "Confirm password",
+              required: true,
+              input_html: { autocomplete: "new-password", class: "auth-input" } %>
+        </div>
+
+      </div>
+
+      <div class="auth-actions">
+        <%= f.button :submit, "Sign up", class: "auth-btn" %>
+      </div>
+
+    <% end %>
+
+    <div class="auth-links">
+      <%= render "devise/shared/links" %>
+    </div>
+
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
