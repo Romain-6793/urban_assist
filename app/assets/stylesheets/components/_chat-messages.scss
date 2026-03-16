@@ -1,0 +1,46 @@
+
+// ─────────────────────────────────────────────
+// _chat-messages.scss
+// ─────────────────────────────────────────────
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__item {
+    display: flex;
+
+    &--user {
+      justify-content: flex-end;
+    }
+
+    &--assistant {
+      justify-content: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  &__bubble {
+    font-size: 13px;
+    line-height: 1.5;
+
+    &--user {
+      background: #185FA5;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 14px 14px 2px 14px;
+      max-width: 80%;
+      margin-right: 10px;
+    }
+
+    &--assistant {
+      color: #444;
+      line-height: 1.6;
+      max-width: 90%;
+    }
+  }
+}
