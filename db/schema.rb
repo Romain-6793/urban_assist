@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_13_094753) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_17_131522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,7 +27,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_13_094753) do
     t.string "name"
     t.string "department"
     t.string "region"
-    t.integer "population"
     t.decimal "avg_price_sqm"
     t.decimal "median_price_sqm"
     t.integer "total_transactions"
@@ -37,6 +36,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_13_094753) do
     t.date "last_updated"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "avg_rent_sqm"
+    t.float "rent_quality"
+    t.float "nb_obs_commune"
   end
 
   create_table "favorites", force: :cascade do |t|
