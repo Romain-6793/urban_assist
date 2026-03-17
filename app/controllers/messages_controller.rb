@@ -30,6 +30,14 @@ class MessagesController < ApplicationController
     @chat.save! if @chat.new_record?
     @message.save!
 
+    @ruby_llm_chat = RubyLLM.chat
+    response = @ruby_llm_chat.ask(@message.content)
+
+    @chat.messages.create!(
+    content: response.content,
+    role: "assistant"
+    )
+
     # Redirige vers le chat créé ou existant
     redirect_to root_path(chat_id: @chat.id)
   end
