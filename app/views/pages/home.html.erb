@@ -15,7 +15,7 @@
         <% @messages.each do |message| %>
           <div class="chat-messages__item chat-messages__item--<%= message.role %>">
             <div class="chat-messages__bubble chat-messages__bubble--<%= message.role %>">
-              <%= message.content %>
+              <%= markdown(message.content) %>
             </div>
           </div>
         <% end %>

@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :load_sidebar_data, if: :user_signed_in?
-
+  helper ApplicationHelper
   private
 
   def load_sidebar_data
