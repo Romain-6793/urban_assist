@@ -173,9 +173,3 @@ def build_conversation_history
     @ruby_llm_chat.add_message(message)
   end
 end
-
-def normalize(str)
-  str.unicode_normalize(:nfd)
-     .gsub(/\p{Mn}/, '')
-     .downcase
-end
