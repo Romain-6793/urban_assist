@@ -8,6 +8,8 @@ class ChatsController < ApplicationController
   def show
     @chat = current_user.chats.find(params[:id])
     @messages = @chat.messages.order(created_at: :asc)
+    @suggested_communes = Commune.where(id: session[:suggested_commune_ids] || [])
+    @favorite_commune_ids = @chat.favorites.pluck(:commune_id)
   end
 
   def destroy

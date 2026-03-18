@@ -145,6 +145,14 @@ PROMPT
     role: "assistant"
     )
 
+    # Parser les IDs directement depuis la réponse
+    ids = response.content.scan(/ID\s*:\s*(\d+)/).flatten.map(&:to_i)
+    if ids.present?
+      session[:suggested_commune_ids] = Commune.where(id: ids).pluck(:id)
+    else
+      session[:suggested_commune_ids] = []
+    end
+
     # Redirige vers le chat créé ou existant
     redirect_to root_path(chat_id: @chat.id)
   end
@@ -158,11 +166,16 @@ PROMPT
     params.require(:message).permit(:content, :role)
   end
 end
-private
 
 # Méthode pour itérer sur les messages existants et les donner au LLM
 def build_conversation_history
   @chat.messages.where.not(id: @message.id).each do |message|
     @ruby_llm_chat.add_message(message)
   end
+end
+
+def normalize(str)
+  str.unicode_normalize(:nfd)
+     .gsub(/\p{Mn}/, '')
+     .downcase
 end
