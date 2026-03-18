@@ -1,0 +1,108 @@
+<%# app/views/shared/_commune_card.html.erb %>
+<%# Variables attendues :
+    - commune : objet Commune
+    - favorite : objet Favorite (optionnel)
+    - chat : objet Chat (optionnel, pour les actions)
+    - mode : "chat" | "favorites" (défaut: "favorites")
+%>
+
+<div class="commune-card <%= 'commune-card--favorited' if mode == 'favorites' %>">
+
+  <div class="commune-card__header">
+    <div class="commune-card__meta">
+      <div class="commune-card__name"><%= commune.name %></div>
+      <div class="commune-card__dept">
+        <%= commune.region %> · <%= commune.department %>
+      </div>
+    </div>
+
+    <!-- Bouton favori -->
+    <% if mode == "favorites" && favorite %>
+      <%= button_to chat_favorite_path(favorite.chat_id, favorite.id),
+          method: :delete,
+          data: { turbo_confirm: "Retirer ce favori ?" },
+          class: "fav-button fav-button--active",
+          form: { style: "display:inline" } do %>
+        <svg viewBox="0 0 12 12" fill="currentColor">
+          <path d="M6 1.5l1.3 2.7 3 .4-2.2 2.1.5 3L6 8.2 3.4 9.7l.5-3L1.7 4.6l3-.4L6 1.5z"/>
+        </svg>
+      <% end %>
+    <% elsif mode == "chat" && chat %>
+      <% if @favorite_commune_ids.include?(commune.id) %>
+        <span class="fav-button fav-button--active">
+          <svg viewBox="0 0 12 12" fill="currentColor">
+            <path d="M6 1.5l1.3 2.7 3 .4-2.2 2.1.5 3L6 8.2 3.4 9.7l.5-3L1.7 4.6l3-.4L6 1.5z"/>
+          </svg>
+        </span>
+      <% else %>
+        <%= button_to chat_favorites_path(chat),
+            method: :post,
+            params: { favorite: { commune_id: commune.id } },
+            class: "fav-button",
+            form: { style: "display:inline" } do %>
+          <svg viewBox="0 0 12 12" fill="currentColor">
+            <path d="M6 1.5l1.3 2.7 3 .4-2.2 2.1.5 3L6 8.2 3.4 9.7l.5-3L1.7 4.6l3-.4L6 1.5z"/>
+          </svg>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="commune-card__divider"></div>
+
+  <div class="commune-card__stats">
+    <% if commune.avg_price_sqm.present? %>
+      <div class="commune-card__stat-row">
+        <span class="commune-card__stat-label">Prix moyen</span>
+        <span class="commune-card__stat-value"><%= number_with_delimiter(commune.avg_price_sqm.to_i) %> €/m²</span>
+      </div>
+    <% end %>
+
+    <% if commune.median_price_sqm.present? %>
+      <div class="commune-card__stat-row">
+        <span class="commune-card__stat-label">Prix médian</span>
+        <span class="commune-card__stat-value"><%= number_with_delimiter(commune.median_price_sqm.to_i) %> €/m²</span>
+      </div>
+    <% end %>
+
+    <% if commune.price_evolution_1y.present? %>
+      <div class="commune-card__stat-row">
+        <span class="commune-card__stat-label">Évolution 1 an</span>
+        <span class="commune-card__stat-value <%= commune.price_evolution_1y >= 0 ? 'commune-card__stat-value--positive' : 'commune-card__stat-value--warning' %>">
+          <%= commune.price_evolution_1y > 0 ? "+" : "" %><%= commune.price_evolution_1y %> %
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <% if commune.total_transactions.present? %>
+    <div class="commune-card__score">
+      <div class="commune-card__score-header">
+        <span>Transactions</span>
+        <span><%= number_with_delimiter(commune.total_transactions) %></span>
+      </div>
+      <div class="commune-card__score-track">
+        <div class="commune-card__score-fill" style="width:<%= [commune.total_transactions / 500.0 * 100, 100].min.to_i %>%"></div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="commune-card__tags">
+    <span class="commune-card__tag"><%= commune.department %></span>
+    <% if favorite&.note.present? %>
+      <span class="commune-card__tag"><%= favorite.note %></span>
+    <% end %>
+  </div>
+
+  <!-- Formulaire note (mode chat uniquement) -->
+  <% if mode == "chat" && chat && !@favorite_commune_ids.include?(commune.id) %>
+    <%= form_with(url: chat_favorites_path(chat), method: :post, class: "commune-card__note-form") do |f| %>
+      <%= hidden_field_tag "favorite[commune_id]", commune.id %>
+      <%= f.text_field :note, name: "favorite[note]",
+          placeholder: "Ajouter une note...",
+          class: "commune-card__note-input" %>
+      <%= f.submit "Ajouter aux favoris", class: "commune-card__note-submit" %>
+    <% end %>
+  <% end %>
+
+</div>
