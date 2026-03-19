@@ -27,20 +27,26 @@
   &__bubble {
     font-size: 13px;
     line-height: 1.5;
+    padding: 10px 14px;
+    max-width: 80%;
+
 
     &--user {
       background: #185FA5;
-      color: white;
       padding: 10px 14px;
       border-radius: 14px 14px 2px 14px;
       max-width: 80%;
       margin-right: 10px;
+      color: white;
     }
 
     &--assistant {
-      color: #444;
+      background:#F0F0F0;
+      color: black;
+      border-radius: 14px 14px 14px 2px;
       line-height: 1.6;
       max-width: 90%;
+      margin-right: 10px;
     }
   }
 }

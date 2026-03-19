@@ -19,7 +19,25 @@
             </div>
           </div>
         <% end %>
+                <!-- Cartes communes suggérées -->
+
+        <% if @suggested_communes.present? %>
+          <div class="suggested-communes mt-3">
+            <p class="suggested-communes__label">📍 Communes suggerées</p>
+            <div class="cards-grid">
+              <% @suggested_communes.each do |commune| %>
+                <%= render "shared/commune_card",
+                    commune: commune,
+                    favorite: nil,
+                    chat: @chat,
+                    mode: "chat" %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
+
+
 
       <!-- Formulaire d'envoi -->
       <div class="chat-input">
