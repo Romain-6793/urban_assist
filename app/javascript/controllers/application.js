@@ -43,3 +43,25 @@ document.addEventListener("turbo:render", () => {
     container.scrollTop = container.scrollHeight
   }
 })
+
+// Gestion du mode édition pour renommer un chat
+document.addEventListener("click", function(e) {
+  const btn = e.target.closest(".sidebar__icon-btn[title='Renommer']")
+  if (!btn) return
+
+  const wrapper = btn.closest(".sidebar__list-item").querySelector(".sidebar__title-wrapper")
+  const input = wrapper.querySelector(".sidebar__edit-input")
+
+  wrapper.classList.add("editing")
+  input.focus()
+  input.select()
+})
+
+document.addEventListener("keydown", function(e) {
+  if (e.key !== "Escape") return
+  const input = document.querySelector(".sidebar__edit-input:focus")
+  if (!input) return
+
+  const wrapper = input.closest(".sidebar__title-wrapper")
+  wrapper.classList.remove("editing")
+})
