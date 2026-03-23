@@ -95,8 +95,9 @@ class CommunesTool < RubyLLM::Tool
         Commune.where("unaccent(lower(name)) = unaccent(lower(?))", zone_name).first ||
         Commune.where("unaccent(lower(name)) LIKE unaccent(lower(?))", "%#{zone_name}%").first
       when "department", "departement"
-        Commune.where("unaccent(lower(department)) = unaccent(lower(?))", zone_name).order("RANDOM()").limit(15) ||
-        Commune.where("unaccent(lower(department)) LIKE unaccent(lower(?))", "%#{zone_name}%").order("RANDOM()").limit(15)
+        normalized_name = normalize_department_name(zone_name)
+        Commune.where("unaccent(lower(department)) = unaccent(lower(?))", normalized_name).order("RANDOM()").limit(15) ||
+        Commune.where("unaccent(lower(department)) LIKE unaccent(lower(?))", "%#{normalized_name}%").order("RANDOM()").limit(15)
       when "region"
         Commune.where("unaccent(lower(region)) = unaccent(lower(?))", zone_name).order("RANDOM()").limit(15) ||
         Commune.where("unaccent(lower(region)) LIKE unaccent(lower(?))", "%#{zone_name}%").order("RANDOM()").limit(15)
