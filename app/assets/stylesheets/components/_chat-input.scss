@@ -21,6 +21,10 @@
     border: none;
     outline: none;
     font-size: 13px;
+    resize: none;           // Empêche le resize manuel si tu veux
+    overflow-y: auto;       // Permet de scroller si le texte dépasse
+    white-space: pre-wrap;  // Permet le retour à la ligne
+    word-wrap: break-word;  // Casse les mots trop longs
   }
 
   &__send {
