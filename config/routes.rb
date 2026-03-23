@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # ===========================
   # Chats
   # ===========================
-  resources :chats, only: [:index, :show, :destroy] do
+  resources :chats, only: [:index, :show, :destroy, :update] do
     # Favoris liés à un chat spécifique
     resources :favorites, only: [:create, :destroy]
   end

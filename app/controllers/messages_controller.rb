@@ -113,11 +113,11 @@ PROMPT
   def message_params
     params.require(:message).permit(:content, :role)
   end
-end
 
-# Méthode pour itérer sur les messages existants et les donner au LLM
-def build_conversation_history
-  @chat.messages.where.not(id: @message.id).each do |message|
-    @ruby_llm_chat.add_message(message)
+  # Méthode pour itérer sur les messages existants et les donner au LLM
+  def build_conversation_history
+    @chat.messages.where.not(id: @message.id).each do |message|
+      @ruby_llm_chat.add_message(message)
+    end
   end
 end

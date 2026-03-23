@@ -19,8 +19,8 @@
             </div>
           </div>
         <% end %>
-                <!-- Cartes communes suggérées -->
 
+        <!-- Cartes communes suggérées -->
         <% if @suggested_communes.present? %>
           <div class="suggested-communes mt-3">
             <p class="suggested-communes__label">📍 Communes suggerées</p>
@@ -37,13 +37,11 @@
         <% end %>
       </div>
 
-
-
       <!-- Formulaire d'envoi -->
       <div class="chat-input">
         <%= form_with(model: Message.new, url: messages_path) do |f| %>
           <div class="chat-input__row">
-            <%= f.text_field :content,
+            <%= f.text_area :content,
                 placeholder: "Tapez votre message ...",
                 class: "chat-input__field",
                 id: "chat-input",
