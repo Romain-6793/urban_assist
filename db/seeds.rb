@@ -1,32 +1,51 @@
-#seedd d'import de données csv DVF
-
 require 'csv'
 
-# on commence par nettoyer la tabll > éviter les doublons
+# on convertit les decimaux à virgules en format avec . (pour ruby)
+def parse_french_decimal(value)
+  return nil if value.nil? || value.strip.empty?
+  value.gsub(',', '.').to_f
+end
+
+# Nettoyage des tables (c'est beintôt le printemps ;-) )
+puts "Un petit coup de propre des données existantes..."
+Favorite.destroy_all
 Commune.destroy_all
 
-# Import depuis le CSV, attention ce fichier doit etre à la racine du projet !
-# NB : il faudra peut être ajuster les noms de champs en fonction de ce que lo'n garde ou ajoute
-CSV.foreach(Rails.root.join('communes_22_24_achat_locatif.csv'), headers: true, header_converters: :symbol) do |row|
+# Import depuis le nouveau CSV avec séparateur ";"
+csv_path = Rails.root.join('communes_22_24_achat_locatif_insee.csv')
+
+CSV.foreach(csv_path, headers: true, col_sep: ';', header_converters: :symbol, encoding: 'ISO-8859-1:UTF-8') do |row|
   Commune.create!(
     insee_code: row[:insee_code],
     name: row[:name],
-    department: row[:department],
-    region: row[:region],
-    avg_price_sqm: row[:avg_price_sqm]&.to_f,
-    median_price_sqm: row[:median_price_sqm]&.to_f,
+    department: row[:dep_code],
+    region: row[:reg_nom],
+    avg_price_sqm: parse_french_decimal(row[:avg_price_sqm]),
+    median_price_sqm: parse_french_decimal(row[:median_price_sqm]),
     total_transactions: row[:total_transactions]&.to_i,
     transactions_last_year: row[:transactions_last_year]&.to_i,
-    price_evolution_1y: row[:price_evolution_1y]&.to_f,
-    price_evolution_3y: row[:price_evolution_3y]&.to_f,
+    price_evolution_1y: parse_french_decimal(row[:price_evolution_1y]),
+    price_evolution_3y: parse_french_decimal(row[:price_evolution_3y]),
     avg_rent_sqm: row[:avg_rent_sqm]&.to_f,
     rent_quality: row[:rent_quality]&.to_f,
     nb_obs_commune: row[:nb_obs_commune]&.to_f,
+    population: row[:population]&.to_i,
+    superficie_km2: row[:superficie_km2]&.to_f,
+    densite: row[:densite]&.to_i,
+    altitude_moyenne: row[:altitude_moyenne]&.to_i,
+    altitude_minimale: row[:altitude_minimale]&.to_i,
+    altitude_maximale: row[:altitude_maximale]&.to_i,
+    latitude_mairie: parse_french_decimal(row[:latitude_mairie]),
+    longitude_mairie: parse_french_decimal(row[:longitude_mairie]),
+    latitude_centre: parse_french_decimal(row[:latitude_centre]),
+    longitude_centre: parse_french_decimal(row[:longitude_centre]),
+    niveau_equipements_services: row[:niveau_equipements_services]&.to_i,
+    url_wikipedia: row[:url_wikipedia],
+    url_villedereve: row[:url_villedereve],
     last_updated: Date.today
   )
 end
 
-puts "Import terminé !"
-puts "Il y a 32677 communes dans le fichier CSV original"
-#un petit count histoire de vérifier si les communes st importés correctement
-puts "#{Commune.count} importés dans la db"
+puts "Import terminé"
+puts "Vous devriez avoir 4766 communes logiquement (enfin espérons hein ! lol)"
+puts "#{Commune.count} communes importées dans la base de données"
