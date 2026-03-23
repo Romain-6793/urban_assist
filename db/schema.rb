@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_18_143709) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_19_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -40,6 +40,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_18_143709) do
     t.float "avg_rent_sqm"
     t.float "rent_quality"
     t.float "nb_obs_commune"
+    t.integer "population"
+    t.float "superficie_km2"
+    t.integer "densite"
+    t.integer "altitude_moyenne"
+    t.integer "altitude_minimale"
+    t.integer "altitude_maximale"
+    t.float "latitude_mairie"
+    t.float "longitude_mairie"
+    t.float "latitude_centre"
+    t.float "longitude_centre"
+    t.integer "niveau_equipements_services"
+    t.string "url_wikipedia"
+    t.string "url_villedereve"
   end
 
   create_table "favorites", force: :cascade do |t|
