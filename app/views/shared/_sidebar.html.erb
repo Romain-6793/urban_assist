@@ -22,11 +22,25 @@
   <ul class="sidebar__list">
     <% @chats.each do |chat| %>
       <li class="sidebar__list-item <%= 'sidebar__list-item--active' if @chat == chat %>">
-        <%= link_to chat.title.presence || "(vide)", root_path(chat_id: chat.id) %>
-        <%= link_to "🗑",
-            chat_path(chat),
+
+        <div class="sidebar__title-wrapper">
+          <%= link_to chat.title.presence || "(vide)", root_path(chat_id: chat.id), class: "sidebar__chat-title" %>
+
+          <%= form_with model: chat, class: "sidebar__title-form" do |f| %>
+            <%= f.text_field :title,
+                            value: chat.title.presence || "",
+                            placeholder: "(sans titre)",
+                            class: "sidebar__edit-input" %>
+          <% end %>
+        </div>
+
+        <button class="sidebar__icon-btn" title="Renommer">✏️</button>
+
+        <%= link_to chat_path(chat),
             data: { turbo_method: :delete, turbo_confirm: "Supprimer cette conversation ?" },
-            class: "sidebar__delete-btn" %>
+            class: "sidebar__icon-btn",
+            title: "Supprimer" do %>🗑️<% end %>
+
       </li>
     <% end %>
   </ul>
