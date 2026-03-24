@@ -29,12 +29,6 @@ class CommunesTool < RubyLLM::Tool
     "martinique" => "972", "guyane" => "973", "la-reunion" => "974", "mayotte" => "976"
   }.freeze
 
-  # REGION_ARRAY = [
-  # "auvergne-rhône-alpes", "bourgogne-franche-comté", "bretagne", "centre-val de loire", 
-  # "corse", "grand est", "hauts-de-france", "île-de-france", "normandie", "nouvelle-aquitaine",
-  # "occitanie", "pays de la loire", "provence-alpes-côte d'azur"
-  # ]
-
   description <<~DESC
     Récupère des données immobilières enrichies depuis la table communes.
     
@@ -193,23 +187,6 @@ class CommunesTool < RubyLLM::Tool
     # Retourner le code si trouvé, sinon le nom original
     DEPARTMENT_MAPPING[normalized] || name
   end
-
-  # def normalize_region_name(name)
-  #   return name if name.nil? || name.empty? || !REGION_ARRAY.include?(name)
-    
-  #   # Normaliser le nom (minuscules, sans accents)
-  #   normalized = name.downcase.strip
-  #   normalized = normalized.gsub(/[àáâãäå]/, 'a')
-  #                          .gsub(/[èéêë]/, 'e')
-  #                          .gsub(/[ìíîï]/, 'i')
-  #                          .gsub(/[òóôõö]/, 'o')
-  #                          .gsub(/[ùúûü]/, 'u')
-  #                          .gsub(/[ç]/, 'c')
-    
-  #   # Retourner le code si trouvé, sinon le nom original
-  #   normalized
-  # end
-
 
   def apply_smart_sorting(records, sort_by)
     # Tri intelligent selon le critère demandé ou par défaut
