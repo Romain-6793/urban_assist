@@ -29,6 +29,12 @@ class CommunesTool < RubyLLM::Tool
     "martinique" => "972", "guyane" => "973", "la-reunion" => "974", "mayotte" => "976"
   }.freeze
 
+  # REGION_ARRAY = [
+  # "auvergne-rhône-alpes", "bourgogne-franche-comté", "bretagne", "centre-val de loire", 
+  # "corse", "grand est", "hauts-de-france", "île-de-france", "normandie", "nouvelle-aquitaine",
+  # "occitanie", "pays de la loire", "provence-alpes-côte d'azur"
+  # ]
+
   description <<~DESC
     Récupère des données immobilières enrichies depuis la table communes.
     
@@ -95,7 +101,7 @@ class CommunesTool < RubyLLM::Tool
         Commune.where("unaccent(lower(name)) = unaccent(lower(?))", zone_name).first ||
         Commune.where("unaccent(lower(name)) LIKE unaccent(lower(?))", "%#{zone_name}%").first
       when "department", "departement"
-        normalized_name = normalize_department_name(zone_name)
+        normalized_name = normalize_name(zone_name)
         Commune.where("unaccent(lower(department)) = unaccent(lower(?))", normalized_name).order("RANDOM()").limit(15) ||
         Commune.where("unaccent(lower(department)) LIKE unaccent(lower(?))", "%#{normalized_name}%").order("RANDOM()").limit(15)
       when "region"
@@ -166,33 +172,13 @@ class CommunesTool < RubyLLM::Tool
     
     # On lui retourne la data demandée avec instructions de formatage
     return {
-      "instructions" => <<~INST,
-        IMPORTANT - FORMAT DE RÉPONSE :
-        1. NE PAS créer de tableau Markdown avec les prix
-        2. Liste les communes au format : "- [NOM] (ID : [id])"
-        3. Les cartes détaillées s'afficheront automatiquement
-        
-        Exemple de réponse attendue :
-        "Voici les communes recommandées dans le Doubs :
-        - MONTBELIARD (ID : 123)
-        - BESANCON (ID : 456)
-        - PONTARLIER (ID : 789)
-        
-        Ces communes correspondent à votre budget de 550€/mois."
-        
-        DISTINCTION ACHAT vs LOCATION :
-        - avg_rent_sqm : loyer mensuel au m² (pour recherches locatives)
-        - median_price_sqm : prix d'achat au m² (pour recherches d'achat)
-        
-        Les communes sont triées par pertinence (transactions + évolution).
-      INST
       "data" => data
     }
   end
 
   private
 
-  def normalize_department_name(name)
+  def normalize_name(name)
     return name if name.nil? || name.empty?
     
     # Normaliser le nom (minuscules, sans accents)
@@ -207,6 +193,23 @@ class CommunesTool < RubyLLM::Tool
     # Retourner le code si trouvé, sinon le nom original
     DEPARTMENT_MAPPING[normalized] || name
   end
+
+  # def normalize_region_name(name)
+  #   return name if name.nil? || name.empty? || !REGION_ARRAY.include?(name)
+    
+  #   # Normaliser le nom (minuscules, sans accents)
+  #   normalized = name.downcase.strip
+  #   normalized = normalized.gsub(/[àáâãäå]/, 'a')
+  #                          .gsub(/[èéêë]/, 'e')
+  #                          .gsub(/[ìíîï]/, 'i')
+  #                          .gsub(/[òóôõö]/, 'o')
+  #                          .gsub(/[ùúûü]/, 'u')
+  #                          .gsub(/[ç]/, 'c')
+    
+  #   # Retourner le code si trouvé, sinon le nom original
+  #   normalized
+  # end
+
 
   def apply_smart_sorting(records, sort_by)
     # Tri intelligent selon le critère demandé ou par défaut

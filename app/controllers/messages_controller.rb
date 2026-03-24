@@ -49,11 +49,6 @@ class MessagesController < ApplicationController
     #   raise "Le LLM n'a pas utilisé le tool"
     # end
 
-    @chat.messages.create!(
-    content: response.content,
-    role: "assistant"
-    )
-
     # Parser les IDs depuis les tool_calls ET depuis le texte (double sécurité)
     commune_ids = []
 
@@ -78,6 +73,12 @@ class MessagesController < ApplicationController
     end
     session[:suggested_commune_ids] = commune_ids.present? ? Commune.where(id: commune_ids).pluck(:id) : []
     Rails.logger.info("🔧 IDs stockés en session : #{session[:suggested_commune_ids]}")
+
+
+    @chat.messages.create!(
+    content: response.content,
+    role: "assistant"
+    )
 
     # Redirige vers le chat créé ou existant
     redirect_to root_path(chat_id: @chat.id)
