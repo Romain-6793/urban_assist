@@ -40,7 +40,7 @@ class MessagesController < ApplicationController
 
     @ruby_llm_chat = RubyLLM.chat
       .with_tools(CommunesTool)
-      .with_temperature(0.2)
+      .with_temperature(0.4)
 
     build_conversation_history
     response = @ruby_llm_chat.with_instructions(UrbanAssistPrompt::SYSTEM_PROMPT).ask(@message.content)
