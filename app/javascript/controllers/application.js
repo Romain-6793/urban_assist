@@ -30,6 +30,16 @@ document.addEventListener("turbo:load", () => {
       button.disabled = input.value.trim() === ""
     })
   }
+
+  if (input) {
+    const form = input.closest("form")
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault()       // empêche le saut de ligne
+        form.requestSubmit()     // soumet le formulaire (Turbo compatible)
+      }
+    })
+  }
 })
 
 
