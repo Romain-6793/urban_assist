@@ -38,7 +38,11 @@ class MessagesController < ApplicationController
     # Ici on précise bien la méthode with_tools avec notre CommunesTool en argument
     # ça va permettre au LLM d'interroger notre db de Communes.
 
-    @ruby_llm_chat = RubyLLM.chat
+    @ruby_llm_chat = RubyLLM.chat(
+        model: "openai/gpt-4o-mini",
+        provider: :openai,
+        assume_model_exists: true
+      )
       .with_tools(CommunesTool)
       .with_temperature(0.2)
 
